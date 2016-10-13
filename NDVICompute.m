@@ -26,13 +26,13 @@ for i = 1:size(NDVI_IN,1)
         %NDVI Calculation and Scaling
         %NDVI = (NIRIntensity - R)/(NIRIntensity + R);
         NIR = B;
-        TrueR = R;
+        TrueR = R - NIR;
         %NDVI = (NIR - TrueR)/(NIR + TrueR);
-        NDVI = (B - TrueR)/(B + TrueR);
+        NDVI = (NIR - TrueR)/(NIR + TrueR);
         
         %Black out useless values like soil and buildings
         if NDVI <= cutoff
-            NDVI_OUT(i,j) = 0;
+            NDVI_OUT(i,j) = -1;
         else
             %Finalizes output by scaling and offseting
             NDVI_OUT(i,j) = (NDVI + offset) * gain;

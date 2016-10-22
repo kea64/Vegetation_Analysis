@@ -1,22 +1,22 @@
-function [NDVI_OUT] = NDVICompute(NDVI_IN, gain, offset, cutoff)
-%Computes the NDVI of an NIR+R image 
-%   By using the NDVI algorithm, a Vegetation Health Index can be
+function [OSAVI_OUT] = OSAVICompute(OSAVI_IN, gain, offset, cutoff)
+%Computes the OSAVI of an NIR+R image 
+%   By using the OSAVI algorithm, a Vegetation Health Index can be
 %   calculated by solely R and NIR values. This is useful in assessing
-%   whether crops are healthy, stressed, or dead
+%   whether crops are healthy, stressed, or dead. Similar to NDVI
 %   
 %   Implemented by Kris Auker
 %   FJ Drones, LLC.
 
 %Creates an empty matrix for future storage
-NDVI_OUT = zeros(size(NDVI_IN,1), size(NDVI_IN,2)); %Grayscale matrix image (NO RGB)
+OSAVI_OUT = zeros(size(OSAVI_IN,1), size(OSAVI_IN,2)); %Grayscale matrix image (NO RGB)
 
 %Main Processing Loop. Runs through each pixel
-for i = 1:size(NDVI_IN,1)
-    for j = 1:size(NDVI_IN,2)
+for i = 1:size(OSAVI_IN,1)
+    for j = 1:size(OSAVI_IN,2)
         %Creates doubles to store each pixel's composition
-        R = double(NDVI_IN(i,j,1));
-        G = double(NDVI_IN(i,j,2));
-        B = double(NDVI_IN(i,j,3));
+        R = double(OSAVI_IN(i,j,1));
+        G = double(OSAVI_IN(i,j,2));
+        B = double(OSAVI_IN(i,j,3));
         
         %Determine Luminosity with Luminosity Calc
         %NIRIntensity = .2126 * R + .7152 * G + .0722 * B;
@@ -28,15 +28,15 @@ for i = 1:size(NDVI_IN,1)
         NIR = R;
         TrueR = G;
         
-        NDVI = (NIR - TrueR)/(NIR + TrueR);
+        OSAVI = 1.5*(NIR - TrueR)/(NIR + TrueR + .16);
         %NDVI = ((NIR - R)/(NIR + R + (255 * L))) * (1 + L);
         
         %Black out useless values like soil and buildings
-        if NDVI <= cutoff
-            NDVI_OUT(i,j) = (NDVI-.5)/2;
+        if OSAVI <= cutoff
+            OSAVI_OUT(i,j) = -1;
         else
             %Finalizes output by scaling and offseting
-            NDVI_OUT(i,j) = (NDVI + offset) * gain;
+            OSAVI_OUT(i,j) = (OSAVI + offset) * gain;
         end
     end
 end

@@ -2,26 +2,15 @@
 
 %% Image Reading
 
-NDVI_O = NDVICompute(RNIR, 1, -.2, .3);
+GEMI = GEMICompute(RNIR, 1, 0, -1);
+OSAVI = OSAVICompute(RNIR, 1, .0, 0);
+IPVI = IPVICompute(RNIR, 1, -.1, .6);
 
 figure
-% subplot(2,1,1)
-% imshow(VARI_O1)
-% colormap(NDVIColor())
-% title('VARI 1')
-
-%subplot(2,1,2)
-imshow(imsharpen(NDVI_O), 'displayrange', [-1 1])
+subplot(1,2,1);
+imshow(imsharpen(GEMI), 'displayrange', [-1 1])
 colormap(NDVIColor())
-%title('VARI 2')
 
-figure
-test5 = rand(250,250);
-for i = 1:size(test5,1)
-   for j = 1:size(test5,2)
-       test5(i,j) = j/250;
-   end
-end
-
-imshow(test5)
-colormap(NDVIColor)
+subplot(1,2,2);
+imshow(imsharpen(OSAVI), 'displayrange', [-1 1])
+colormap(NDVIColor())
